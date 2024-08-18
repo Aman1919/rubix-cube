@@ -1,0 +1,59 @@
+*{
+box-sizing: border-box;
+margin: 0;
+}
+
+body{
+font-family: sans-serif;
+overflow: hidden;
+width: 100%;
+}
+
+.btn_list_div{
+position: absolute;;
+top: 20px;
+background-color: black;
+display: flex;
+padding: .5rem;
+border-radius: 10px;
+left: 43%;
+gap: .5rem;
+}
+
+button{
+background-color: white;
+color: black;
+padding: .2rem;
+border-radius: 10px;
+width: 40px;
+height: 38px;
+}
+
+button:hover,button:active,.active{
+background-color: #3174F3;
+color: white;
+}
+
+button#cross{
+position: absolute;
+right: 10px;
+top: 10px;
+font-size: 2rem;
+padding: .07rem;
+color: white;
+background-color: #FF0000;
+}
+
+#cross:hover{
+background-color: #c30505be;
+}
+
+#clickme{
+position: absolute;
+left: 45%;
+bottom: 10%;
+background-color: white;
+color: black;
+width:80px ;
+padding: .07rem;
+}
