@@ -28,6 +28,13 @@ const ArrowAtom = atom({
         default:false
 })
 
+const CrossAtom = atom({
+        key: "CrossAtom",
+        default: false
+})
+const ClickMeAtom = atom({
+        key: "ClickMeAtom",
+        default:false
+})
 
-
-export {ArrowAtom,ResetAtom,ZoomInAtom,ZoomOutAtom,BuildingAtom}
+export {ArrowAtom,ResetAtom,ZoomInAtom,CrossAtom,ZoomOutAtom,BuildingAtom,ClickMeAtom}

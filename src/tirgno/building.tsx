@@ -6,13 +6,13 @@ export default class Building {
         width: number; height: number;
         imgsrc: string;
         person: Person | null
-        constructor(x: number, y: number, imgsrc: string, canvas_module: canvas_module, person: string |null = null,width = 400) {
+        constructor(x: number, y: number, imgsrc: string, canvas_module: canvas_module,width = 400) {
                 this.x = x;
                 this.y = y;
                 this.width = width;
                 this.height = 700;
                 this.imgsrc = imgsrc
-                this.person = person?new Person(this.x+this.width -130, this.y+75,person):null;
+                this.person = (imgsrc==='greenbuilding')?new Person(this.x+this.width -130, this.y+100):null;
                 this.drawBuilding(canvas_module)
         }
         
@@ -21,7 +21,7 @@ export default class Building {
                         this.person.drawPerson(canvas_module)
                         // canvas_module.sleep();
                 }
-                canvas_module.DrawImg(this.imgsrc, this.x, this.y, this.width, this.height);
+                canvas_module.DrawObjectImage(this.imgsrc, this.x, this.y, this.width, this.height);
         }
         setPosition(x:number,y:number) {
                 this.x = x;

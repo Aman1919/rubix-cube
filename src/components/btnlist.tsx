@@ -1,5 +1,5 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { ArrowAtom, BuildingAtom,  ResetAtom, ZoomInAtom, ZoomOutAtom } from "../store";
+import { ArrowAtom, BuildingAtom,  ClickMeAtom,  CrossAtom,  ResetAtom, ZoomInAtom, ZoomOutAtom } from "../store";
 
 export default function BtnList() {
   const setBuildingBtn = useSetRecoilState(BuildingAtom);
@@ -7,8 +7,10 @@ export default function BtnList() {
   const setZoominBtn = useSetRecoilState(ZoomInAtom);
   const setZoomoutBtn = useSetRecoilState(ZoomOutAtom); 
   const setResetbtn = useSetRecoilState(ResetAtom);
+    const setcrossBtn = useSetRecoilState(CrossAtom)
+  const setClickMeBtn = useSetRecoilState(ClickMeAtom);
   
-  return (
+  return (<>
     <div className="btn_list_div">
                   <button id="building" onClick={() => setBuildingBtn(true)}>
         <svg
@@ -142,5 +144,8 @@ export default function BtnList() {
         </svg>
       </button>
     </div>
+        <button id="cross"  onClick={()=>setcrossBtn(true)}>X</button>
+      <button id="clickme" onClick={()=>setClickMeBtn(true)}>Click Me</button>
+  </>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useRecoilState } from "recoil";
-import { ArrowAtom, BuildingAtom, ResetAtom } from "./store";
+import { ArrowAtom, BuildingAtom, ClickMeAtom, CrossAtom, ResetAtom } from "./store";
 import TrignoHeightAndDistance from "./tirgno";
 export default function Canvas(){
         const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -8,7 +8,8 @@ export default function Canvas(){
         const [ArrowBtn, setArrowBtn] = useRecoilState(ArrowAtom);
         const [reset, setReset] = useRecoilState(ResetAtom);
         const [game, setGame] = useState<TrignoHeightAndDistance | null>(null);
-        
+        const [cross, setCross] = useRecoilState(CrossAtom);
+        const [clickme, setClickMe] = useRecoilState(ClickMeAtom);
         
         useEffect(() => {
                 const canvas = canvasRef.current;
@@ -30,18 +31,35 @@ export default function Canvas(){
                 if (reset) {
                         game.reset();
                         setReset(false);
+                        setbuildingBtn(false);
+                        setArrowBtn(false);
+                }
+                if (cross) {
+                        game.cross();
+                                setCross(false);                        
+                        
+                }
+                if (clickme) {
+                        game.clickMe();
+                        setClickMe(false);
                 }
                 
-        }, [buildingBtn, game, reset, setReset, setbuildingBtn])
+        }, [buildingBtn, clickme, cross, game, reset, setClickMe, setCross, setReset, setbuildingBtn])
         
         
         
-        return <canvas ref={canvasRef} onClick={(e) => (game?.onclick(e))} onMouseDown={(e) => (game && ArrowBtn) ? game.MouseDown(e, 'arrow') : game?.MouseDown(e,'pointer')}
+        return <canvas ref={canvasRef} onClick={(e) => (game?.onclick(e))}
+                onMouseDown={(e) => (game && ArrowBtn) ? game.MouseDown(e, 'arrow') : game?.MouseDown(e, 'pointer')}
                 onMouseMove={(e) => (game && ArrowBtn) ? game.MouseMove(e,"arrow") : game?.MouseMove(e,'pointer')}
                 onMouseUp={() => {
                 if (game) {
                         game.MouseUp();
-                        setArrowBtn(false);
+                        
+                        if (ArrowBtn) {
+                                game.cross();
+                                setArrowBtn(false);
+                                
+                        }
                 }
         }}></canvas>
 }
