@@ -1,4 +1,5 @@
 import Objects from "../assests/allobjects.png"
+import background from "../assests/background.png"
 
 
 export default class canvas_module{
@@ -20,10 +21,10 @@ export default class canvas_module{
         
        DrawImg(imgsrc: string, x: number, y: number, width: number, height: number) {
                 const img = new Image();
-                img.src = imgsrc;
+               img.src = imgsrc;
+               this.context.drawImage(img, x, y, width, height);
                img.onload = () => {
                        this.context.drawImage(img, x, y, width, height);
-                       console.log(img);
                 }
                 
                 img.onerror = (e)=>console.log("error: ",e);
@@ -33,14 +34,14 @@ export default class canvas_module{
         DrawClipImg(imgsrc: string,  sx:number, sy:number, sWidth:number, sHeight:number,x: number, y: number, width: number, height: number) {
         const img = new Image();
                 img.src = imgsrc;
+               this.context.drawImage(img,sx,sy,sWidth,sHeight, x, y, width, height);
                img.onload = () => {
                        this.context.drawImage(img,sx,sy,sWidth,sHeight, x, y, width, height);
-                       console.log(img);
                 }
                 img.onerror = (e)=>console.log("error: ",e);       
         }
         
-        DrawObjectImage(img:string,x: number, y: number, width: number, height: number) {
+        DrawObjectImage(img:string,x: number, y: number, width: number, height: number,sx =0,sy =0) {
         switch (img) {
                 case 'greenbuilding':
                         this.DrawClipImg(Objects, 0, 0, 710, 1000, x, y, width, height);
@@ -58,11 +59,16 @@ export default class canvas_module{
                         this.DrawClipImg(Objects, 2798, 0, 78, 300, x, y, width, height);
                         break;
                 case "captureperson":
+                        this.DrawClipImg(Objects, 1120, 0, 550, 550, x, y, width, height);
                         break;
                 case "capturebuilding":
+                        this.DrawClipImg(Objects, 715, 300, 400, 600, x, y, width, height);
                         break;
                 case 'camera':
                         this.DrawClipImg(Objects, 2150, 0, 570, 370, x, y, width, height);
+                        break;
+                case 'sky':
+                        this.DrawClipImg(background, sx, sy, 710, 1000, x, y, width, height);
                         break;
                 default:
                         break;
@@ -96,8 +102,8 @@ export default class canvas_module{
         }
         
 
-       sleep() {
-    return new Promise(resolve => setTimeout(resolve, 100));
+       sleep(ms:number=100) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
         
 }

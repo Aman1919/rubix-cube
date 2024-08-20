@@ -13,14 +13,16 @@ export default class TrignoHeightAndDistance{
         constructor(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
                 this.canvas_module = new canvas_module(canvas, context);
                 this.canvas = canvas;
-                 this.canvas_module.DrawImg(background, 0, 0, this.canvas.width, this.canvas.height);
+                this.canvas_module.DrawImg(background, 0, 0, this.canvas.width, this.canvas.height);
                 this.cameraBuilding = new Building(this.canvas.width / 2 - 200, this.canvas.height-400,"greenbuilding" , this.canvas_module)
         this.Movement = new Movement(this.cameraBuilding);
                 
         }
         
         createBuilding() {
-             this.BuildingList.push(new Building(this.canvas.width - 400, 300, 'purplebuilding1', this.canvas_module,300))
+             if(this.BuildingList.length > 2)return
+                else if(this.BuildingList.length === 0)this.BuildingList.push(new Building(this.canvas.width - 400, 300, 'purplebuilding1', this.canvas_module, 300))
+                else if(this.BuildingList.length === 1)this.BuildingList.push(new Building( 400, 300, 'purplebuilding1', this.canvas_module, 300))
         }
         
         redraw() {
@@ -45,11 +47,11 @@ export default class TrignoHeightAndDistance{
                                 
                 }          
                 this.redraw();
-                this.Movement.pointer = { x: 0, y:0, width:0, height: 0,x1:0,y1:0 ,clicked:false,angle:0} ;
+                this.Movement.pointer = null;
         }
         
         clickMe() {
-        
+        this.Movement.pointer?.Capture(this.canvas_module)
         }
         
         
@@ -61,9 +63,9 @@ export default class TrignoHeightAndDistance{
                 if (str === 'arrow') {
                         this.Movement.moveClickedBuilding(x, y);
                         this.redraw();
-                } else if (str === 'pointer'&&this.Movement.pointer.clicked) {
+                } else if (str === 'pointer'&&this.Movement.pointer&&this.Movement.pointer.clicked) {
                         this.redraw();
-                        this.Movement.moveClickedPointer(x, y, this.canvas_module, this.BuildingList[0]);
+                        this.Movement.moveClickedPointer(x, y, this.canvas_module);
                 }
         }
         
@@ -80,11 +82,12 @@ export default class TrignoHeightAndDistance{
         }
         
         MouseUp() {
-                if(this.Movement.pointer.clicked)this.Movement.DrawPointer(this.canvas_module, 0, this.BuildingList[0]);
-                console.log(this.Movement.pointer.angle);
-                
-                this.Movement.clickedObject = null;
+                if (this.Movement.pointer && this.Movement.pointer.clicked) {
+                        this.Movement.pointer.DrawPointer(this.canvas_module, 0);
+                        console.log(this.Movement.pointer?.angle);
                 this.Movement.pointer.clicked = false; 
+                }
+                this.Movement.clickedObject = null;
                 
         }
         

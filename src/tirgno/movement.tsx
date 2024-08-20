@@ -1,9 +1,10 @@
 import Building from "./building";
 import canvas_module from "./canvas_module";
+import CameraAngleIndicator from "./pointer";
 
 export default class Movement {
         clickedObject: Building | null = null;
-        pointer = { x: 0, y: 0, width: 0, height: 0, x1: 0, y1: 0, clicked: false, angle: 0 }; 
+        pointer:CameraAngleIndicator | null =  null; 
         cameramanhand = { x: 0, y: 0, width: 0, height: 0 };
         cameraBuilding: Building;
         constructor(cameraBuilding: Building) {
@@ -45,101 +46,54 @@ export default class Movement {
 
         }
 
-        moveClickedPointer(x2:number,y2:number,canvas_module:canvas_module,building:Building) {
+        moveClickedPointer(x2:number,y2:number,canvas_module:canvas_module) {
                 if (!this.pointer || (this.pointer && !this.pointer.clicked)) return;
-                console.log(this.pointer,'1');
+                const { x} = this.cameramanhand;
+                const b = this.pointer.building;
+                const base = Math.abs(b.x - x);
+                let p= Math.tan(this.pointer.angle) * base;
+                
+                if(y2>this.pointer.y1)p-=1
+                else p += 1
                 this.pointer.y1 = y2;
-                console.log(this.pointer,'1');
-                const { x1, x, y, y1 } = this.pointer;
-                const b = Math.abs(x1 - x), p = Math.abs(y1 - y);
-                const angle = Math.atan(b / p);
-                this.pointer.angle = angle;
-                this.DrawPointer(canvas_module, angle, building);                
+                console.log(p);
+                const angle = Math.atan(p / base);
+                this.pointer.setAngle(angle);
+                this.pointer.DrawPointer(canvas_module, angle);                
         }
 
         onClick(
-                x: number,
-                y: number,
+                x1: number,
+                y1: number,
                 canvas_module: canvas_module,
                 BuildingList: Building[]
         ) {
-                const a = this.cameramanhand;
+                const {x,y,width} = this.cameramanhand;
                 if (
-                        x < a.x + a.width &&
-                        x >= a.x + a.width - 15 &&
-                        y >= a.y &&
-                        y < a.y + 15 &&
+                        x1 < x + width &&
+                        x1 >= x + width - 15 &&
+                        y1 >= y &&
+                        y1 < y + 15 &&
                         BuildingList.length
                 ) {
                 const b=  BuildingList[0]
 
-                const p= Math.abs(Math.floor(b.y - a.y));
-                const base = Math.abs(Math.floor(b.x - a.x));
-                        const angle = Math.atan(p / base);
-                        this.setPointer(angle);
-                        this.DrawPointer(canvas_module, angle, b);
-                        const cross = document.getElementById("cross");
-                        const clickme = document.getElementById("clickme");
-                        if (cross && clickme) {
-                                cross.style.display = "block";
-                                clickme.style.display = "block";
-                        }
+                const p= Math.abs(b.y - y);
+                const base = Math.abs(b.x - x);
+                const angle = Math.atan(p / base);
+                this.setPointer(angle,b);
+                this.pointer?.DrawPointer(canvas_module, angle);                
+                        
                 }
         }
         
-        DrawCamera(canvas_module: canvas_module) {
-                const x= (canvas_module.canvas.width/2)-200
-                canvas_module.DrawObjectImage('camera', x, 100, 300, 200);
-        }
-
-        DrawPointer(canvas_module: canvas_module, angle: number, b: Building) {
-                const { x, y, x1, y1 } = this.pointer; 
-                if (!angle) angle = this.pointer.angle;
-                const height = this.cameramanhand.height/3;
-                canvas_module.DrawLine(x, y + height, x1, y1);//triangle hypotense line
-                
-                canvas_module.DrawLine(x, y + height,x1, y+height);//triangle base line
-                canvas_module.DrawObjectImage('pointer', x1 -25, y1-23, 50, 50);
-                
-                canvas_module.DrawText(
-                        x + 35,
-                        y + height - 6,
-                        Math.floor(angle * (180 / Math.PI)).toString()
-                );
-                canvas_module.DrawArc(
-                        x,
-                        y + height,
-                        35,
-                        2 * Math.PI - angle,
-                        2 * Math.PI
-                );
-                
-                this.DrawDistanceLine(canvas_module, b);
-                this.DrawCamera(canvas_module);
-                
-        }
         
-        setPointer(angle:number) {
+        setPointer(angle:number,building:Building) {
                 const {x,y} = this.cameramanhand;
                 const perpendecular = Math.tan(angle) * 110;
-                this.pointer = { x: x  , y: y , width: 50, height: 50 ,y1:y - perpendecular+36,x1:x+100,clicked:false,angle};
+                this.pointer = new CameraAngleIndicator(this.cameramanhand,angle,50,50, x + 100, y - perpendecular + 36,building);
         }
         
-        DrawDistanceLine(canvas_module: canvas_module, b: Building) {
-                const a2 = this.cameramanhand;
-                const perpendecular = Math.abs(Math.floor(b.y - a2.y));
-                const base = Math.abs(Math.floor(b.x - a2.x));
-                let x = b.x - 20, y = a2.y + 50, x1 = b.x - 20, y1 = b.y + 50;
-                
-                canvas_module.DrawLine(x,y,x1,y1, "#5708FF", 4, [10, 10]);//perpendecular
-                canvas_module.DrawText(x - 70, perpendecular / 2 + y1, perpendecular.toString() +" cm", "#5708FF")
-                
-                x = a2.x + 30; y = a2.y + a2.height + 40; x1 = b.x - 10; y1 = a2.y  + a2.height + 40;
-                canvas_module.DrawLine(x, y, x1, y1,"#FAFF08",4,[10,10]);//base
-                canvas_module.DrawText(x+base/2-20,y1+20,base.toString() + " cm","#FAFF08")
-
-        }
-
         collisionCheck(x: number, y: number, building: Building) {
                 return (
                         x >= building.x &&

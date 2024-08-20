@@ -44,7 +44,7 @@ export default function Canvas(){
                         setClickMe(false);
                 }
                 
-        }, [buildingBtn, clickme, cross, game, reset, setClickMe, setCross, setReset, setbuildingBtn])
+        }, [buildingBtn, clickme, cross, game, reset])
         
         
         
