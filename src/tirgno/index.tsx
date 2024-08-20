@@ -1,7 +1,6 @@
 import Building from "./building";
 import canvas_module from "./canvas_module";
 
-import background from "../assests/background.png"
 import Movement from "./movement";
 
 export default class TrignoHeightAndDistance{
@@ -13,7 +12,7 @@ export default class TrignoHeightAndDistance{
         constructor(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
                 this.canvas_module = new canvas_module(canvas, context);
                 this.canvas = canvas;
-                this.canvas_module.DrawImg(background, 0, 0, this.canvas.width, this.canvas.height);
+                this.canvas_module.DrawObjectImage('background', 0, 0, this.canvas.width, this.canvas.height);                
                 this.cameraBuilding = new Building(this.canvas.width / 2 - 200, this.canvas.height-400,"greenbuilding" , this.canvas_module)
         this.Movement = new Movement(this.cameraBuilding);
                 
@@ -22,11 +21,12 @@ export default class TrignoHeightAndDistance{
         createBuilding() {
              if(this.BuildingList.length > 2)return
                 else if(this.BuildingList.length === 0)this.BuildingList.push(new Building(this.canvas.width - 400, 300, 'purplebuilding1', this.canvas_module, 300))
-                else if(this.BuildingList.length === 1)this.BuildingList.push(new Building( 400, 300, 'purplebuilding1', this.canvas_module, 300))
+                else if (this.BuildingList.length === 1) this.BuildingList.push(new Building(400, 300, 'purplebuilding1', this.canvas_module, 300))
+                this.cameraBuilding.drawBuilding(this.canvas_module);
         }
         
         redraw() {
-                this.canvas_module.DrawImg(background, 0, 0, this.canvas.width, this.canvas.height);
+                this.canvas_module.DrawObjectImage('background', 0, 0, this.canvas.width, this.canvas.height);
                 this.BuildingList.forEach(b => b.drawBuilding(this.canvas_module));
                 this.cameraBuilding.drawBuilding(this.canvas_module);
         }

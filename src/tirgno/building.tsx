@@ -13,7 +13,7 @@ export default class Building {
                 this.height = 700;
                 this.imgsrc = imgsrc
                 this.person = (imgsrc==='greenbuilding')?new Person(this.x+this.width -130, this.y+100):null;
-                this.drawBuilding(canvas_module)
+               if(imgsrc!=='greenbuilding') this.drawBuilding(canvas_module)      
         }
         
         drawBuilding(canvas_module:canvas_module) {

@@ -6,16 +6,6 @@ const BuildingAtom = atom({
 })
 
 
-const ZoomInAtom = atom({
-        key: "ZoomInAtom",
-        default:false
-})
-
-const ZoomOutAtom = atom({
-        key: "ZoomOutAtom",
-        default:false
-})
-
 
 const ResetAtom = atom({
         key: "ResetAtom",
@@ -37,4 +27,4 @@ const ClickMeAtom = atom({
         default:false
 })
 
-export {ArrowAtom,ResetAtom,ZoomInAtom,CrossAtom,ZoomOutAtom,BuildingAtom,ClickMeAtom}
+export {ArrowAtom,ResetAtom,CrossAtom,BuildingAtom,ClickMeAtom}

@@ -1,5 +1,4 @@
 import Objects from "../assests/allobjects.png"
-import background from "../assests/background.png"
 
 
 export default class canvas_module{
@@ -34,9 +33,10 @@ export default class canvas_module{
         DrawClipImg(imgsrc: string,  sx:number, sy:number, sWidth:number, sHeight:number,x: number, y: number, width: number, height: number) {
         const img = new Image();
                 img.src = imgsrc;
-               this.context.drawImage(img,sx,sy,sWidth,sHeight, x, y, width, height);
+        //        this.context.drawImage(img,sx,sy,sWidth,sHeight, x, y, width, height);
                img.onload = () => {
-                       this.context.drawImage(img,sx,sy,sWidth,sHeight, x, y, width, height);
+                this.context.imageSmoothingQuality = "low"
+                this.context.drawImage(img,sx,sy,sWidth,sHeight, x, y, width, height);
                 }
                 img.onerror = (e)=>console.log("error: ",e);       
         }
@@ -68,7 +68,10 @@ export default class canvas_module{
                         this.DrawClipImg(Objects, 2150, 0, 570, 370, x, y, width, height);
                         break;
                 case 'sky':
-                        this.DrawClipImg(background, sx, sy, 710, 1000, x, y, width, height);
+                        this.DrawClipImg(Objects,2700+ sx, 400+ sy, 710, 1000, x, y, width, height);
+                        break;
+                case 'background':
+                        this.DrawClipImg(Objects, 2700, 400, 3520, 2100, x, y, width, height);
                         break;
                 default:
                         break;
