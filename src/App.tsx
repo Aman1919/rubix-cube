@@ -1,5 +1,5 @@
 import Canvas from "./canvas"
-import BtnList from './components/BtnList'
+import BtnList from './components/btnlist'
 
 import { RecoilRoot} from "recoil"
 function App() {
