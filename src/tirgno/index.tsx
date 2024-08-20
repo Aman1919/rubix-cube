@@ -65,7 +65,7 @@ export default class TrignoHeightAndDistance{
                         this.redraw();
                 } else if (str === 'pointer'&&this.Movement.pointer&&this.Movement.pointer.clicked) {
                         this.redraw();
-                        this.Movement.moveClickedPointer(x, y, this.canvas_module);
+                        this.Movement.moveClickedPointer( y, this.canvas_module);
                 }
         }
         

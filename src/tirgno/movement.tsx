@@ -46,7 +46,7 @@ export default class Movement {
 
         }
 
-        moveClickedPointer(x2:number,y2:number,canvas_module:canvas_module) {
+        moveClickedPointer(y2:number,canvas_module:canvas_module) {
                 if (!this.pointer || (this.pointer && !this.pointer.clicked)) return;
                 const { x} = this.cameramanhand;
                 const b = this.pointer.building;
