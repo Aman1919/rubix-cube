@@ -7,7 +7,7 @@ body{
 font-family: sans-serif;
 overflow: hidden;
 width: 100%;
-}
+} 
 
 .btn_list_div{
 position: absolute;;
@@ -60,4 +60,8 @@ color: black;
 width:80px ;
 padding: .07rem;
 display: none;
+}
+
+canvas{
+background: url("./assests/background.png") no-repeat center/cover;
 }

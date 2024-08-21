@@ -47,10 +47,10 @@ export default class CameraAngleIndicator{
                 const {x,y,height} = this.cameramanhand;
                 if (!angle) angle = this.angle;
                 const h = height/3;
+                canvas_module.DrawObjectImage('pointer', x1 -25, y1-23, 50, 50);
                 canvas_module.DrawLine(x, y + h, x1, y1);//triangle hypotense line
                 
                 canvas_module.DrawLine(x, y + h,x1, y+h);//triangle base line
-                canvas_module.DrawObjectImage('pointer', x1 -25, y1-23, 50, 50);
                 
                 canvas_module.DrawText(
                         x + 35,

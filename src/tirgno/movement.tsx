@@ -40,10 +40,20 @@ export default class Movement {
                 }
         }
 
-        moveClickedBuilding(x: number, y: number) {
+        moveClickedBuilding(x: number, y: number,buildingList:Building[]) {
                 if (!this.clickedObject) return;
+                if (this.BuildingMovingRestriction(buildingList, x, y)) return;
                 this.clickedObject.setPosition(x, y);
 
+        }
+        
+        BuildingMovingRestriction(buildingList: Building[], x: number, y: number) {
+                if (buildingList.some(b => (this.clickedObject?.imgsrc !== b.imgsrc) ? this.collisionCheck(x, y, b) : false)
+                        ||
+                        (this.clickedObject?.imgsrc !== this.cameraBuilding.imgsrc) ? this.collisionCheck(x, y, this.cameraBuilding) : false) return true;
+                
+                
+                return false;
         }
 
         moveClickedPointer(y2:number,canvas_module:canvas_module) {

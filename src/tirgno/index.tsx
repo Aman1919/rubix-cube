@@ -12,7 +12,7 @@ export default class TrignoHeightAndDistance{
         constructor(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
                 this.canvas_module = new canvas_module(canvas, context);
                 this.canvas = canvas;
-                this.canvas_module.DrawObjectImage('background', 0, 0, this.canvas.width, this.canvas.height);                
+                // this.canvas_module.DrawObjectImage('background', 0, 0, this.canvas.width, this.canvas.height);                
                 this.cameraBuilding = new Building(this.canvas.width / 2 - 200, this.canvas.height-400,"greenbuilding" , this.canvas_module)
         this.Movement = new Movement(this.cameraBuilding);
                 
@@ -25,10 +25,10 @@ export default class TrignoHeightAndDistance{
                 this.cameraBuilding.drawBuilding(this.canvas_module);
         }
         
-        redraw() {
-                this.canvas_module.DrawObjectImage('background', 0, 0, this.canvas.width, this.canvas.height);
+       redraw() {
+                this.canvas_module.clear( 0, 0, this.canvas.width, this.canvas.height);
                 this.BuildingList.forEach(b => b.drawBuilding(this.canvas_module));
-                this.cameraBuilding.drawBuilding(this.canvas_module);
+              this.cameraBuilding.drawBuilding(this.canvas_module);
         }
         
         reset() {
@@ -61,7 +61,8 @@ export default class TrignoHeightAndDistance{
                 const x = (e.clientX - rect.x);
                 const y = (e.clientY - rect.y);
                 if (str === 'arrow') {
-                        this.Movement.moveClickedBuilding(x, y);
+                        this.Movement.moveClickedBuilding(x, y,this.BuildingList);
+                        
                         this.redraw();
                 } else if (str === 'pointer'&&this.Movement.pointer&&this.Movement.pointer.clicked) {
                         this.redraw();
