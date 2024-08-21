@@ -63,5 +63,5 @@ display: none;
 }
 
 canvas{
-background: url("./assests/background.png") no-repeat center/cover;
+background: url("./assests/background.png") no-repeat center center/cover;
 }

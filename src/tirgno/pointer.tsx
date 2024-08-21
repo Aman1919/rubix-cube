@@ -4,7 +4,7 @@ export default class CameraAngleIndicator{
         width: number; height: number; x1: number; y1: number; clicked = false; angle = 0; 
         cameramanhand = { x: 0, y: 0, width: 0, height: 0 };
         building: Building;
-        camera = { x: 0, y: 100, width: 300, height: 200 };
+        camera = { x: 0, y: 100, width: 300, height: 200 };     
         constructor(cameramanhand: { x: number; y: number; width: number; height: number },angle:number,width:number,height:number,x1:number,y1:number,building:Building) { 
         
                 this.width = width;
@@ -37,9 +37,11 @@ export default class CameraAngleIndicator{
         
         
          DrawCamera(canvas_module: canvas_module) {
-                 const x = (canvas_module.canvas.width / 2) - 200
-                 this.camera.x = x;
-                canvas_module.DrawObjectImage('camera', x, 100, 300, 200);
+                
+                 this.camera.x =  (canvas_module.canvas.width / 2) - this.camera.width / 2;
+                 console.log(this.camera.x);
+                 
+                canvas_module.DrawObjectImage('camera', this.camera.x, this.camera.y, this.camera.width, this.camera.height);
         }
 
         DrawPointer(canvas_module: canvas_module, angle: number) {

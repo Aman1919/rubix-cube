@@ -40,25 +40,29 @@ export default class Movement {
                 }
         }
 
-        moveClickedBuilding(x: number, y: number,buildingList:Building[]) {
+        moveClickedBuilding(x: number, y: number,building:Building[]) {
                 if (!this.clickedObject) return;
-                if (this.BuildingMovingRestriction(buildingList, x, y)) return;
-                this.clickedObject.setPosition(x, y);
+                if(this.BuildingMoveRestriction(x,y,building))return
+                if(this.clickedObject.imgsrc!=='greenbuilding')this.clickedObject.setPosition(this.clickedObject.x,y );
+                else this.clickedObject.setPosition(x,this.clickedObject.y );
 
         }
         
-        BuildingMovingRestriction(buildingList: Building[], x: number, y: number) {
-                if (buildingList.some(b => (this.clickedObject?.imgsrc !== b.imgsrc) ? this.collisionCheck(x, y, b) : false)
-                        ||
-                        (this.clickedObject?.imgsrc !== this.cameraBuilding.imgsrc) ? this.collisionCheck(x, y, this.cameraBuilding) : false) return true;
+        BuildingMoveRestriction(x: number, y: number, building: Building[]) {
+                if (!this.clickedObject) return false
+                const w = this.clickedObject.width;
+                if (this.clickedObject.imgsrc==='greenbuilding' && (building.some(b=>b.x<=x+w )&&building.length>0)) return true;
+                if ( this.clickedObject.imgsrc === 'purplebuilding1' && (y < 100)) return true;
+                console.log('no');
                 
-                
-                return false;
+                return false
         }
-
+        
+        
         moveClickedPointer(y2:number,canvas_module:canvas_module) {
                 if (!this.pointer || (this.pointer && !this.pointer.clicked)) return;
-                const { x} = this.cameramanhand;
+                const { x } = this.cameramanhand;
+                
                 const b = this.pointer.building;
                 const base = Math.abs(b.x - x);
                 let p= Math.tan(this.pointer.angle) * base;
@@ -78,8 +82,17 @@ export default class Movement {
                 canvas_module: canvas_module,
                 BuildingList: Building[]
         ) {
-                const {x,y,width} = this.cameramanhand;
-                if (
+                const { x, y, width } = this.cameramanhand;
+                if (this.pointer) {
+                        const { x, y, width, height } = this.pointer.camera;
+                        if (x1< x + (3*width/4)+40 &&
+                            x1 >= x + (3*width/4) &&
+                            y1 >= y+height/2+10 &&
+                            y1 < y+height/2+50) {
+                                this.pointer.Capture(canvas_module);
+                        }
+                }
+               if (
                         x1 < x + width &&
                         x1 >= x + width - 15 &&
                         y1 >= y &&
@@ -92,9 +105,10 @@ export default class Movement {
                 const base = Math.abs(b.x - x);
                 const angle = Math.atan(p / base);
                 this.setPointer(angle,b);
-                this.pointer?.DrawPointer(canvas_module, angle);                
+                if(this.pointer)this.pointer.DrawPointer(canvas_module, angle);                
                         
                 }
+                
         }
         
         

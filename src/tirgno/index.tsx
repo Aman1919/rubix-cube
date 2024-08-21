@@ -12,16 +12,14 @@ export default class TrignoHeightAndDistance{
         constructor(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
                 this.canvas_module = new canvas_module(canvas, context);
                 this.canvas = canvas;
-                // this.canvas_module.DrawObjectImage('background', 0, 0, this.canvas.width, this.canvas.height);                
                 this.cameraBuilding = new Building(this.canvas.width / 2 - 200, this.canvas.height-400,"greenbuilding" , this.canvas_module)
         this.Movement = new Movement(this.cameraBuilding);
                 
         }
         
         createBuilding() {
-             if(this.BuildingList.length > 2)return
+             if(this.BuildingList.length > 1)return
                 else if(this.BuildingList.length === 0)this.BuildingList.push(new Building(this.canvas.width - 400, 300, 'purplebuilding1', this.canvas_module, 300))
-                else if (this.BuildingList.length === 1) this.BuildingList.push(new Building(400, 300, 'purplebuilding1', this.canvas_module, 300))
                 this.cameraBuilding.drawBuilding(this.canvas_module);
         }
         
@@ -33,7 +31,7 @@ export default class TrignoHeightAndDistance{
         
         reset() {
                 this.BuildingList = [];
-                this.cameraBuilding.setPosition(this.canvas.width / 2 - 200, this.canvas.height - 300)
+                this.cameraBuilding.setPosition(this.canvas.width / 2 - 200, this.canvas.height-400,)
                 this.cross();
                 this.redraw();
         }          

@@ -9,26 +9,12 @@ export default class canvas_module{
                 this.context = context;
         }
         
-        Clear() {
-                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        }
-        
         
         clear(x:number,y:number,w:number,h:number) {
                 this.context.clearRect(x, y,w,h);
         }
         
-       DrawImg(imgsrc: string, x: number, y: number, width: number, height: number) {
-                const img = new Image();
-               img.src = imgsrc;
-               this.context.drawImage(img, x, y, width, height);
-               img.onload = () => {
-                       this.context.drawImage(img, x, y, width, height);
-                }
-                
-                img.onerror = (e)=>console.log("error: ",e);
-                
-        }
+       
         
         DrawClipImg(imgsrc: string,  sx:number, sy:number, sWidth:number, sHeight:number,x: number, y: number, width: number, height: number) {
         const img = new Image();
