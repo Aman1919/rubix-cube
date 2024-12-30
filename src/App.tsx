@@ -1,17 +1,25 @@
-import Canvas from "./canvas"
-import BtnList from './components/btnlist'
+import './App.css';
+import React, { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
+import  RubiksCube from './components/rubixCube';
 
-import { RecoilRoot} from "recoil"
+
 function App() {
+ const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [cube, setCube] = useState<RubiksCube | null>(null);
+  const [scene, setScene] = useState<THREE.Scene | null>(null);
 
-  return (
-    <RecoilRoot>
-      
-      <BtnList></BtnList>
-      <Canvas></Canvas>
+useEffect(()=>{
+if(!canvasRef.current)return
+const canvas = canvasRef.current;
 
-</RecoilRoot>  
-  )
+
+},[canvasRef]);
+
+return (
+<canvas ref={canvasRef}></canvas>
+
+);
 }
 
-export default App
+export default App;
