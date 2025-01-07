@@ -24,6 +24,8 @@ export default class SceneInit {
             1000
           );
           this.camera.position.z = 5;
+          this.camera.position.y = 5;
+          this.camera.position.x = 5;
       
           this.clock = new THREE.Clock();
           this.scene = new THREE.Scene();

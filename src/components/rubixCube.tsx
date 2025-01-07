@@ -3,7 +3,6 @@ import Cube from './cubeLet';
 import * as TWEEN from '@tweenjs/tween.js';
 
 export default class RubiksCube{
-    cube;
     cubes:Cube[] = [];
     size: number = 3;
     positions =  [];
@@ -12,7 +11,6 @@ export default class RubiksCube{
     epsilon:number;
     consoleDebug:boolean;
     constructor(){
-        this.cube = new THREE.Group();
         this.initializeRubiksCube()
         this.epsilon = 0.5;
         this.consoleDebug = true;
