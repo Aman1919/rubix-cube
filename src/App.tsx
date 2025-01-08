@@ -7,14 +7,29 @@ import { GUI } from 'dat.gui';
 
 function App() {
  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [cube, setCube] = useState<RubiksCube | null>(null);
-  const [scene, setScene] = useState<THREE.Scene | null>(null);
+  const [cubeSize, setCubeSize] = useState({
+    n1: 10,
+    n2: 10,
+    n3: 10,
+  });
+const [create,setCreate ]= useState(true);
+  const handleInputChange = (key:string, value:any) => {
+    // Allow only numeric values
+        if (!isNaN(value)&&value>=0) {
+      setCubeSize((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    }
+  };
+
 
 useEffect(()=>{
-if(!canvasRef.current)return
+if(!canvasRef.current||!create)return
 const canvas = canvasRef.current;
+
 const InitScene = new SceneInit(canvas);
-const rubiksCube = new RubiksCube();
+const rubiksCube = new RubiksCube(cubeSize.n1, cubeSize.n2, cubeSize.n3);
 const mouse = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
@@ -43,19 +58,50 @@ const onKeyDown = (event:any) => {
 
 window.addEventListener('keydown', onKeyDown);
 window.addEventListener('mousedown', onMouseDown);
+setCreate(false);
 
 
-const gui = new GUI();
-const folder = gui.addFolder("Rubik's Cube");
-folder.add(rubiksCube, 'epsilon', 0.5, 3.5, 0.5);
-folder.add(rubiksCube, 'consoleDebug');
-folder.open();
+
+},[canvasRef,create]);
 
 
-},[canvasRef]);
+
 
 return (
+  <div className='app'>
+<div className="form-container">
+      <input
+        type="text"
+        className="form-input"
+        placeholder="N1"
+        value={cubeSize.n1}
+        onChange={(e) => handleInputChange("n1",  Number(e.target.value))}
+      />
+      <input
+        type="text"
+        className="form-input"
+        placeholder="N2"
+        value={cubeSize.n2}
+        onChange={(e) => handleInputChange("n2",  Number(e.target.value))}
+      />
+      <input
+        type="text"
+        className="form-input"
+        placeholder="N3"
+        value={cubeSize.n3}
+        onChange={(e) => handleInputChange("n3",  Number(e.target.value))}
+      />
+      <button
+        className="form-button"
+        onClick={() => {
+          setCreate(true);
+        }}
+      >
+        Create
+      </button>
+    </div>
 <canvas ref={canvasRef}></canvas>
+  </div>
 
 );
 }

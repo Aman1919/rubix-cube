@@ -3,20 +3,23 @@ import Cube from './cubeLet';
 import * as TWEEN from '@tweenjs/tween.js';
 
 export default class RubiksCube{
-    cube;
     cubes:Cube[] = [];
     size: number = 3;
     positions =  [];
     rubiksCubeGroup = new THREE.Group();
     selectedCube:any;
-    epsilon:number;
+    epsilon:number = 0.5;
     consoleDebug:boolean;
-    constructor(){
-        this.cube = new THREE.Group();
-        this.initializeRubiksCube()
-        this.epsilon = 0.5;
-        this.consoleDebug = true;
-
+    n1:number;
+    n2:number;
+    n3:number
+    rotating:boolean = false;
+    constructor(n1:number=3,n2:number=3,n3:number=3){
+      this.n1 = n1;
+      this.n2 = n2;
+      this.n3 = n3;
+      this.initializeRubiksCube()
+      this.consoleDebug = true;
     }
 
     getText(key:number) {
@@ -63,9 +66,11 @@ export default class RubiksCube{
       }
 
       onKeyDown(event:any) {
+        const n = 1;
+        if(this.rotating) return;
         if (event.key === 'w') {
           this.displayKey(event.key);
-          const axis = new THREE.Vector3(-1, 0, 0);
+          const axis = new THREE.Vector3(-n, 0, 0);
           this.cubes.forEach((cube) => {
             if (this.cubeInSameX(cube, this.selectedCube)) {
               this.rotateAroundWorldAxis(cube.cubeGroup, axis);
@@ -73,35 +78,35 @@ export default class RubiksCube{
           });
         } else if (event.key === 'a') {
           this.displayKey(event.key);
-          const axis = new THREE.Vector3(0, -1, 0);
+          const axis = new THREE.Vector3(0, -n, 0);
           this.cubes.forEach((cube) => {
             if (this.cubeInSameY(cube, this.selectedCube))
               this.rotateAroundWorldAxis(cube.cubeGroup, axis);
           });
         } else if (event.key === 's') {
           this.displayKey(event.key);
-          const axis = new THREE.Vector3(1, 0, 0);
+          const axis = new THREE.Vector3(n, 0, 0);
           this.cubes.forEach((cube) => {
             if (this.cubeInSameX(cube, this.selectedCube))
               this.rotateAroundWorldAxis(cube.cubeGroup, axis);
           });
         } else if (event.key === 'd') {
           this.displayKey(event.key);
-          const axis = new THREE.Vector3(0, 1, 0);
+          const axis = new THREE.Vector3(0, n, 0);
           this.cubes.forEach((cube) => {
             if (this.cubeInSameY(cube, this.selectedCube))
               this.rotateAroundWorldAxis(cube.cubeGroup, axis);
           });
         } else if (event.key === 'q') {
           this.displayKey(event.key);
-          const axis = new THREE.Vector3(0, 0, 1);
+          const axis = new THREE.Vector3(0, 0, n);
           this.cubes.forEach((cube) => {
             if (this.cubeInSameZ(cube, this.selectedCube))
               this.rotateAroundWorldAxis(cube.cubeGroup, axis);
           });
         } else if (event.key === 'e') {
           this.displayKey(event.key);
-          const axis = new THREE.Vector3(0, 0, -1);
+          const axis = new THREE.Vector3(0, 0, -n);
           this.cubes.forEach((cube) => {
             if (this.cubeInSameZ(cube, this.selectedCube))
               this.rotateAroundWorldAxis(cube.cubeGroup, axis);
@@ -110,14 +115,11 @@ export default class RubiksCube{
       }
     
 
-
-
       rotateAroundWorldAxis(cubeGroup:THREE.Group, axis:any) {
         const start = { rotation: 0 };
         const prev = { rotation: 0 };
         const end = { rotation: Math.PI / 2 };
-        console.log(this.selectedCube);
-    
+        this.rotating = true;
         const tween = new TWEEN.Tween(start)
           .to(end, 500)
           .easing(TWEEN.Easing.Quadratic.InOut)
@@ -147,7 +149,9 @@ export default class RubiksCube{
           });
     
         tween.start();
-
+        tween.onComplete(() => {
+          this.rotating = false;
+        });
         const anim = (time: number) => {
             tween.update(time);
             requestAnimationFrame(anim);
@@ -168,52 +172,26 @@ export default class RubiksCube{
       }
 
     initializeRubiksCube() {
-        this.cubes = [
-          // Front 2x2.
-          // new Cube(-1, 1, 1),
-          // new Cube(1, 1, 1),
-          // new Cube(-1, -1, 1),
-          // new Cube(1, -1, 1),
-    
-          // Back 2x2.
-          // new Cube(-1, 1, -1),
-          // new Cube(1, 1, -1),
-          // new Cube(-1, -1, -1),
-          // new Cube(1, -1, -1),
-    
-          // Front face.
-          new Cube(-1, 1, 1),
-          new Cube(0, 1, 1),
-          new Cube(1, 1, 1),
-          new Cube(-1, 0, 1),
-          new Cube(0, 0, 1),
-          new Cube(1, 0, 1),
-          new Cube(-1, -1, 1),
-          new Cube(0, -1, 1),
-          new Cube(1, -1, 1),
-    
-          // Middle face.
-          new Cube(-1, 1, 0),
-          new Cube(0, 1, 0),
-          new Cube(1, 1, 0),
-          new Cube(-1, 0, 0),
-          new Cube(0, 0, 0),
-          new Cube(1, 0, 0),
-          new Cube(-1, -1, 0),
-          new Cube(0, -1, 0),
-          new Cube(1, -1, 0),
-    
-          // Back face.
-          new Cube(-1, 1, -1),
-          new Cube(0, 1, -1),
-          new Cube(1, 1, -1),
-          new Cube(-1, 0, -1),
-          new Cube(0, 0, -1),
-          new Cube(1, 0, -1),
-          new Cube(-1, -1, -1),
-          new Cube(0, -1, -1),
-          new Cube(1, -1, -1),
-        ];
+      const n1 = this.n1;
+      const n2 = this.n2;
+      const n3 = this.n3;
+      
+      let c = 2 + this.epsilon * (n1 - 3);
+      console.log(this.epsilon);
+      
+      for (let i = -n1 + c; i < n1 + (-n1 + c); i++) {
+        c = 2 + this.epsilon * (n2 - 3);
+      
+        for (let j = -n2 + c; j < n2 + (-n2 + c); j++) {
+          c = 2 + this.epsilon * (n3 - 3);
+      
+          for (let k = -n3 + c; k < n3 + (-n3 + c); k++) {
+            this.cubes.push(new Cube(i, j, k));
+          }
+        }
+      }
+      
+
     
         this.cubes.forEach((cube) => {
           this.rubiksCubeGroup.add(cube.cubeGroup);
