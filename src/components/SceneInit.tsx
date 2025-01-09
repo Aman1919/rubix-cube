@@ -14,7 +14,7 @@ this.InitScene(canvas);
 
 InitScene(canvas:HTMLCanvasElement){
 this.renderer = new THREE.WebGLRenderer({canvas,antialias:true});
-this.renderer.setSize(Math.min(window.innerWidth*0.97,800),Math.min(window.innerHeight*0.75,800))
+this.renderer.setSize(Math.min(window.innerWidth*0.97,1200),Math.min(window.innerHeight*0.9,700))
 this.camera.position.set(5,5,5);
 this.stats = new Stats();
 document.body.appendChild(this.stats.dom);
