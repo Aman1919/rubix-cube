@@ -1,106 +1,78 @@
 import './App.css';
 import  { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import  RubiksCube from './components/rubixCube';
 import SceneInit from './components/SceneInit';
-import { GUI } from 'dat.gui';
+import RubixCube from './components/RubixCube';
 
 function App() {
  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [cubeSize, setCubeSize] = useState({
-    n1: 10,
-    n2: 10,
-    n3: 10,
-  });
-const [create,setCreate ]= useState(true);
-  const handleInputChange = (key:string, value:any) => {
-    // Allow only numeric values
-        if (!isNaN(value)&&value>=0) {
-      setCubeSize((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-    }
-  };
-
-
-useEffect(()=>{
-if(!canvasRef.current||!create)return
+ const [CubeSize,setCubeSize] = useState(3);
+const [generate,setGenerate]=useState(true);
+const [rubixCube,setRubixCube]=useState<RubixCube | null>(null)
+ useEffect(()=>{
+  if(!canvasRef.current||!generate)return;
 const canvas = canvasRef.current;
-
-const InitScene = new SceneInit(canvas);
-const rubiksCube = new RubiksCube(cubeSize.n1, cubeSize.n2, cubeSize.n3);
-const mouse = new THREE.Vector2();
+const scene = new SceneInit(canvas);
+const Rubix = new RubixCube(CubeSize);
+scene.scene.add(Rubix.RubixCubeGroup);
+scene.animate();
 const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2()
+setRubixCube(Rubix);
+function mousedown(e:any){
+  mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+  raycaster.setFromCamera(mouse,scene.camera);
 
-InitScene.scene.add(rubiksCube.rubiksCubeGroup);
-InitScene.animate();
-
-function onMouseDown(event:any) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  raycaster.setFromCamera(mouse, InitScene.camera);
-  const objects = raycaster.intersectObjects(rubiksCube.rubiksCubeGroup.children);
-  const cubeObjects = objects.filter((c) => {
-    return c.object.type === 'Mesh';
+  const intersects = raycaster.intersectObject(scene.scene).filter(obj=>{
+    return obj.object.type === 'Mesh'
   });
-  if (cubeObjects.length > 0) {
-    rubiksCube.highlightCubes(cubeObjects[0].object);
+  if(intersects.length>0){
+    Rubix.highLightCube(intersects[0].object)
+  }else{
+    Rubix.resetHightLight();
   }
+
 }
 
-const onKeyDown = (event:any) => {
-  if (event.repeat) {
-    return;
-  }
-  rubiksCube.onKeyDown(event);
-};
-
-window.addEventListener('keydown', onKeyDown);
-window.addEventListener('mousedown', onMouseDown);
-setCreate(false);
-
-
-
-},[canvasRef,create]);
-
-
-
+function keyDown(e:any){
+  const key = e.key;
+Rubix.keyDown(key);
+}
+window.addEventListener("keydown",keyDown)
+canvas.addEventListener('mousedown',mousedown)
+setGenerate(false);
+ },[canvasRef,generate])
 
 return (
   <div className='app'>
-<div className="form-container">
-      <input
-        type="text"
-        className="form-input"
-        placeholder="N1"
-        value={cubeSize.n1}
-        onChange={(e) => handleInputChange("n1",  Number(e.target.value))}
-      />
-      <input
-        type="text"
-        className="form-input"
-        placeholder="N2"
-        value={cubeSize.n2}
-        onChange={(e) => handleInputChange("n2",  Number(e.target.value))}
-      />
-      <input
-        type="text"
-        className="form-input"
-        placeholder="N3"
-        value={cubeSize.n3}
-        onChange={(e) => handleInputChange("n3",  Number(e.target.value))}
-      />
-      <button
-        className="form-button"
-        onClick={() => {
-          setCreate(true);
-        }}
-      >
-        Create
-      </button>
+    <h1>N - Dimensions Rubix Cube</h1>
+    <p>Note: 1. Select a Cube piece then press keys below to move the faces <br/>
+    2. If Your are seeing only bright color it could be bcz cube has become big try zooming out.
+    </p>
+    <div className='flex'>
+
+    <div className='form-container'>
+
+     <input type="text" className='form-input' value={CubeSize} onChange={(e)=>{
+      const value  = Number(e.target.value);
+      if(!isNaN(value))setCubeSize(value);
+     }} />
+ 
+     <button className='form-button' onClick={()=>setGenerate(true)}>Generate</button>
     </div>
-<canvas ref={canvasRef}></canvas>
+    <div className="gamepad">
+    <div className="key w" onClick={()=>rubixCube?.keyDown("w")}>W</div>
+    <div className="key a" onClick={()=>rubixCube?.keyDown("a")}>A</div>
+    <div className="key s" onClick={()=>rubixCube?.keyDown("s")}>S</div>
+    <div className="key d" onClick={()=>rubixCube?.keyDown("d")}>D</div>
+    <div className="key q" onClick={()=>rubixCube?.keyDown("q")}>Q</div>
+    <div className="key e" onClick={()=>rubixCube?.keyDown("e")}>E</div>
+  </div>
+
+    </div>
+
+    <canvas ref={canvasRef}></canvas>
   </div>
 
 );
